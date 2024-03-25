@@ -21,6 +21,7 @@ TODO
 This project is very much in progress and is currently in POC stage. The following are the things that need to be done:
 
 * Currently the differences are printed to stdout. We need to add a way to annotate the differences so that we can track them.
+* Add support for other debian packaging file diffs too - not just control file.
 * Report on annotated differences as well as unannotated differences.
 * Exit 1 if there are differences that are not annotated/expected.
 
