@@ -84,31 +84,34 @@ def main(agent_package: str) -> None:
     upstream_control_fields = parse_control_file(GOOGLE_CONTROL_FILENAME)
 
     # Compare the control fields
-    for field_name in [field_to_compare for field_to_compare in ubuntu_control_fields.keys() if field_to_compare in FIELDS_TO_COMPARE]:
-        with warnings.catch_warnings():
-            warnings.filterwarnings("error")
-            print(f"\n############## Comparing \"{field_name}\" ##############")
-            if field_name in upstream_control_fields.keys():
-                print(f"\"{field_name}\" field in Google upstream:\n {upstream_control_fields[field_name]}")
-                try:
-                    upstream_relations = deb822.PkgRelation.parse_relations(upstream_control_fields[field_name])
-                    pprint.pprint(upstream_relations, indent=4, sort_dicts=False)
-                    print("------------")
-                except Warning:
-                    pass
-            else:
-                print(f"\"{field_name}\" field not present in Google Upstream\n------------")
-            if field_name in ubuntu_control_fields.keys():
-                print(f"\"{field_name}\" field in ubuntu:\n {ubuntu_control_fields[field_name]}")
-                try:
-                    ubuntu_relations = deb822.PkgRelation.parse_relations(ubuntu_control_fields[field_name])
-                    pprint.pprint(ubuntu_relations, indent=4, sort_dicts=False)
-                except Warning:
-                    pass
-            else:
-                print(f"\"{field_name}\" field not present in ubuntu")
-
-    clean_up()
+    try:
+        for field_name in [field_to_compare for field_to_compare in ubuntu_control_fields.keys() if field_to_compare in FIELDS_TO_COMPARE]:
+            with warnings.catch_warnings():
+                warnings.filterwarnings("error")
+                print(f"\n############## Comparing \"{field_name}\" ##############")
+                if field_name in upstream_control_fields.keys():
+                    print(f"\"{field_name}\" field in Google upstream:\n {upstream_control_fields[field_name]}")
+                    try:
+                        upstream_relations = deb822.PkgRelation.parse_relations(upstream_control_fields[field_name])
+                        pprint.pprint(upstream_relations, indent=4, sort_dicts=False)
+                        print("------------")
+                    except Warning:
+                        pass
+                else:
+                    print(f"\"{field_name}\" field not present in Google Upstream\n------------")
+                if field_name in ubuntu_control_fields.keys():
+                    print(f"\"{field_name}\" field in ubuntu:\n {ubuntu_control_fields[field_name]}")
+                    try:
+                        ubuntu_relations = deb822.PkgRelation.parse_relations(ubuntu_control_fields[field_name])
+                        pprint.pprint(ubuntu_relations, indent=4, sort_dicts=False)
+                    except Warning:
+                        pass
+                else:
+                    print(f"\"{field_name}\" field not present in ubuntu")
+    except Exception as err:
+        sys.exit(f"The following error occurred: {err}")
+    finally:
+        clean_up()
 
 
 if __name__ == '__main__':
